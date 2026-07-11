@@ -124,7 +124,7 @@ struct UpdaterView: View {
             } else if vm.packages.isEmpty {
                 emptyState(icon: "checkmark.circle", message: "모든 패키지가 최신 버전입니다")
             } else {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     TossList(items: vm.packages) { package in
                         HStack {
                         Image(systemName: package.isCask ? "app.badge" : "terminal")

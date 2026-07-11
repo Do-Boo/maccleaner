@@ -17,18 +17,22 @@ struct LargeFilesView: View {
                 subtitle: "홈 폴더에서 큰 파일을 찾아 공간을 확보합니다"
             ) {
                 HStack {
-                    Picker("기준", selection: $vm.minSizeMB) {
-                        Text("100MB 이상").tag(100)
-                        Text("500MB 이상").tag(500)
-                        Text("1GB 이상").tag(1000)
-                        Text("5GB 이상").tag(5000)
-                    }
+                    BrandMenuPicker(
+                        title: "기준",
+                        selection: $vm.minSizeMB,
+                        options: [
+                            (100, "100MB 이상"),
+                            (500, "500MB 이상"),
+                            (1000, "1GB 이상"),
+                            (5000, "5GB 이상"),
+                        ]
+                    )
                     .frame(width: 150)
-                    Picker("정렬", selection: $sort) {
-                        ForEach(ScanItemSort.allCases) { option in
-                            Text(option.rawValue).tag(option)
-                        }
-                    }
+                    BrandMenuPicker(
+                        title: "정렬",
+                        selection: $sort,
+                        options: ScanItemSort.allCases.map { ($0, $0.rawValue) }
+                    )
                     .frame(width: 100)
 
                     Button {
@@ -86,7 +90,7 @@ struct LargeFilesView: View {
             } else if vm.files.isEmpty {
                 emptyState(icon: "checkmark.circle", message: "기준보다 큰 파일이 없습니다")
             } else {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     TossList(items: sortedFiles) { file in
                         HStack {
                             Toggle(isOn: Binding(

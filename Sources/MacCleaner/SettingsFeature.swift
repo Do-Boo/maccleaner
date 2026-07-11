@@ -179,7 +179,7 @@ struct SettingsView: View {
                 }
             }
 
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 18) {
                     optionsSection
                     diagnosticsSection
@@ -230,8 +230,11 @@ struct SettingsView: View {
                 }
             }
             .background(TossColor.card)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .stroke(TossColor.line)
+            )
         }
     }
 
@@ -244,19 +247,25 @@ struct SettingsView: View {
                     title: "다운로드 정리 기본 기준",
                     subtitle: "다운로드 정리 화면의 기본 기간입니다"
                 ) {
-                    Picker("", selection: $defaultDownloadMonths) {
-                        Text("1개월").tag(1)
-                        Text("3개월").tag(3)
-                        Text("6개월").tag(6)
-                        Text("1년").tag(12)
-                    }
+                    BrandMenuPicker(
+                        title: "기본 기간",
+                        selection: $defaultDownloadMonths,
+                        options: [
+                            (1, "1개월"),
+                            (3, "3개월"),
+                            (6, "6개월"),
+                            (12, "1년"),
+                        ]
+                    )
                     .frame(width: 130)
-                    .labelsHidden()
                 }
             }
             .background(TossColor.card)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .stroke(TossColor.line)
+            )
         }
     }
 
@@ -387,8 +396,11 @@ struct SettingsView: View {
         }
         .padding(16)
         .background(TossColor.card)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(TossColor.line)
+        )
     }
 }
 

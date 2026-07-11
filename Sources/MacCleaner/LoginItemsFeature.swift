@@ -131,7 +131,7 @@ struct LoginItemsView: View {
             } else if vm.items.isEmpty {
                 emptyState(icon: "checkmark.circle", message: "등록된 LaunchAgent가 없습니다")
             } else {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 18) {
                         if !userItems.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
@@ -180,7 +180,7 @@ struct LoginItemsView: View {
                     get: { item.enabled },
                     set: { vm.toggle(item, enabled: $0) }
                 ))
-                .toggleStyle(.switch)
+                .toggleStyle(BrandSwitchToggleStyle())
                 .labelsHidden()
             } else {
                 Text(item.enabled ? "켜짐" : "꺼짐")

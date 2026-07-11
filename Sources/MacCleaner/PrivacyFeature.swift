@@ -239,7 +239,7 @@ struct PrivacyView: View {
             } else if vm.items.isEmpty {
                 emptyState(icon: "checkmark.circle", message: "정리할 브라우저 데이터가 없습니다")
             } else {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 18) {
                         ForEach(groupedByBrowser, id: \.0) { browser, items in
                             VStack(alignment: .leading, spacing: 8) {

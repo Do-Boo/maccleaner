@@ -26,11 +26,11 @@ struct AppsView: View {
             ) {
                 HStack(spacing: 10) {
                     searchField
-                    Picker("정렬", selection: $sort) {
-                        ForEach(AppSort.allCases) { option in
-                            Text(option.rawValue).tag(option)
-                        }
-                    }
+                    BrandMenuPicker(
+                        title: "정렬",
+                        selection: $sort,
+                        options: AppSort.allCases.map { ($0, $0.rawValue) }
+                    )
                     .frame(width: 105)
                     Button {
                         vm.scan()
@@ -101,7 +101,7 @@ struct AppsView: View {
                 .padding(.horizontal, 28)
                 .padding(.bottom, 12)
 
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     LazyVStack(spacing: 10) {
                         ForEach(filteredApps) { app in
                             appCard(app)
@@ -204,8 +204,11 @@ struct AppsView: View {
         .padding(.horizontal, 18)
         .padding(.vertical, 14)
         .background(TossColor.card)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .shadow(color: .black.opacity(0.04), radius: 10, y: 3)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(TossColor.line)
+        )
     }
 }
 
@@ -284,7 +287,7 @@ private struct UninstallSheet: View {
             }
 
             // 삭제 대상 목록
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     sheetRow(name: plan.app.url.lastPathComponent, path: plan.app.url.path, size: plan.app.size)
                     ForEach(plan.leftovers) { item in
@@ -304,7 +307,7 @@ private struct UninstallSheet: View {
             .frame(maxHeight: 180)
             .padding(14)
             .background(TossColor.grey100)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             .padding(.top, 20)
 
             HStack(spacing: 12) {

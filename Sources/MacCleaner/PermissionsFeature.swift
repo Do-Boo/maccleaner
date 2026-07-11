@@ -237,7 +237,7 @@ struct PermissionsView: View {
                 emptyState(icon: "lock.shield", message: "권한 진단을 실행합니다")
                     .onAppear { vm.refresh() }
             } else {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 14) {
                         summary
                         TossList(items: vm.checks) { check in
@@ -281,13 +281,16 @@ struct PermissionsView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(18)
         .background(TossColor.card)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(TossColor.line)
+        )
     }
 
     private func row(_ check: PermissionCheck) -> some View {
         HStack(spacing: 14) {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(check.severity.background)
                 .frame(width: 42, height: 42)
                 .overlay(

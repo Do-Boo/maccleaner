@@ -39,7 +39,7 @@ struct JunkView: View {
             } else if vm.categories.isEmpty {
                 emptyState(icon: "checkmark.circle", message: "정리할 파일이 없습니다. 깨끗해요!")
             } else {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 18) {
                         ForEach(vm.categories) { category in
                             VStack(alignment: .leading, spacing: 8) {

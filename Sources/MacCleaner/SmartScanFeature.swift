@@ -150,7 +150,7 @@ struct SmartScanView: View {
 
     private var readyState: some View {
         VStack(spacing: 0) {
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(TossColor.blueLight)
                 .frame(width: 80, height: 80)
                 .overlay(
@@ -313,7 +313,7 @@ struct SmartScanView: View {
                     .foregroundStyle(TossColor.grey500)
                 Spacer()
                 Toggle("", isOn: include)
-                    .toggleStyle(.switch)
+                    .toggleStyle(BrandSwitchToggleStyle())
                     .labelsHidden()
                     .controlSize(.small)
             }
@@ -321,7 +321,10 @@ struct SmartScanView: View {
         .padding(16)
         .frame(maxWidth: .infinity, minHeight: 132, alignment: .topLeading)
         .background(TossColor.card)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(TossColor.line)
+        )
     }
 }

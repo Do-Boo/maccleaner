@@ -38,18 +38,11 @@ enum AppSection: String, CaseIterable, Identifiable {
     }
 }
 
-/// 사이드바 그룹 구성
-private let sidebarGroups: [(title: String, sections: [AppSection])] = [
-    ("분석 및 비우기", [.dashboard, .smartScan, .permissions]),
-    ("정리", [.junk, .largeFiles, .duplicates, .downloads]),
-    ("앱", [.apps, .updater]),
-    ("속도", [.loginItems, .maintenance]),
-    ("보안", [.privacy, .shredder]),
-    ("관리", [.settings]),
-]
-
 struct ContentView: View {
-    @State private var selection: AppSection? = .dashboard
+    @State private var selection: AppSection = .dashboard
+    @State private var searchText = ""
+    @State private var sidebarCollapsed = false
+    @State private var inspectorVisible = true
     @StateObject private var dashboardVM = DashboardViewModel()
     @StateObject private var smartScanVM = SmartScanViewModel()
     @StateObject private var permissionsVM = PermissionsViewModel()
@@ -69,50 +62,52 @@ struct ContentView: View {
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
-        NavigationSplitView {
-            sidebar
-                .navigationSplitViewColumnWidth(min: 235, ideal: 250)
-        } detail: {
-            Group {
-                switch selection ?? .dashboard {
-                case .dashboard:
-                    DashboardView(vm: dashboardVM, selection: $selection) {
-                        selection = .smartScan
-                        smartScanVM.scan()
+        VStack(spacing: 0) {
+            BrandTopBar(
+                selection: selection,
+                searchText: $searchText,
+                sidebarCollapsed: sidebarCollapsed,
+                inspectorVisible: inspectorVisible,
+                onToggleSidebar: {
+                    withAnimation(.easeInOut(duration: 0.18)) {
+                        sidebarCollapsed.toggle()
                     }
-                case .smartScan:
-                    SmartScanView(vm: smartScanVM)
-                case .permissions:
-                    PermissionsView(vm: permissionsVM)
-                case .junk:
-                    JunkView(vm: junkVM)
-                case .largeFiles:
-                    LargeFilesView(vm: largeFilesVM)
-                case .duplicates:
-                    DuplicatesView(vm: duplicatesVM)
-                case .downloads:
-                    DownloadsView(vm: downloadsVM)
-                case .apps:
-                    AppsView(vm: appsVM)
-                case .updater:
-                    UpdaterView(vm: updaterVM)
-                case .loginItems:
-                    LoginItemsView(vm: loginItemsVM)
-                case .maintenance:
-                    MaintenanceView(vm: maintenanceVM)
-                case .privacy:
-                    PrivacyView(vm: privacyVM)
-                case .shredder:
-                    ShredderView(vm: shredderVM)
-                case .settings:
-                    SettingsView(history: historyStore, exclusions: exclusionStore)
+                },
+                onToggleInspector: {
+                    withAnimation(.easeInOut(duration: 0.18)) {
+                        inspectorVisible.toggle()
+                    }
+                },
+                onOpenMonitor: { openWindow(id: "monitor") },
+                onSelect: { selection = $0 }
+            )
+
+            HStack(spacing: 0) {
+                BrandSidebar(selection: $selection, collapsed: sidebarCollapsed)
+
+                detailContent
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(TossColor.canvas)
+                    .scrollIndicators(.hidden)
+
+                if inspectorVisible {
+                    SystemPulsePanel(
+                        monitor: MonitorModel.shared,
+                        dashboard: dashboardVM,
+                        history: historyStore,
+                        selection: selection
+                    )
+                    .transition(.move(edge: .trailing).combined(with: .opacity))
                 }
             }
-            .background(TossColor.bg)
         }
-        .frame(minWidth: 980, minHeight: 680)
-        .navigationTitle("MacCleaner")
-        // 토스 디자인 시스템 전역 적용
+        .frame(minWidth: 1180, minHeight: 720)
+        .background(TossColor.canvas)
+        .overlay {
+            MacCleanerWindowConfigurator()
+                .frame(width: 0, height: 0)
+                .allowsHitTesting(false)
+        }
         .tint(TossColor.blue)
         .buttonStyle(TossButtonStyle())
         .groupBoxStyle(TossGroupBoxStyle())
@@ -138,33 +133,41 @@ struct ContentView: View {
         }
     }
 
-    // MARK: - 사이드바
-
-    private var sidebar: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 22) {
-                    ForEach(sidebarGroups, id: \.title) { group in
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(group.title)
-                                .font(.system(size: 11, weight: .bold))
-                                .foregroundStyle(TossColor.grey400)
-                                .padding(.horizontal, 12)
-                                .padding(.bottom, 5)
-                            ForEach(group.sections) { section in
-                                navItem(section)
-                            }
-                        }
-                    }
-
-                    monitorSection
-                }
-                .padding(12)
+    @ViewBuilder
+    private var detailContent: some View {
+        switch selection {
+        case .dashboard:
+            DashboardView(vm: dashboardVM, selection: $selection) {
+                selection = .smartScan
+                smartScanVM.scan()
             }
-            deviceCard
-                .padding(12)
+        case .smartScan:
+            SmartScanView(vm: smartScanVM)
+        case .permissions:
+            PermissionsView(vm: permissionsVM)
+        case .junk:
+            JunkView(vm: junkVM)
+        case .largeFiles:
+            LargeFilesView(vm: largeFilesVM)
+        case .duplicates:
+            DuplicatesView(vm: duplicatesVM)
+        case .downloads:
+            DownloadsView(vm: downloadsVM)
+        case .apps:
+            AppsView(vm: appsVM)
+        case .updater:
+            UpdaterView(vm: updaterVM)
+        case .loginItems:
+            LoginItemsView(vm: loginItemsVM)
+        case .maintenance:
+            MaintenanceView(vm: maintenanceVM)
+        case .privacy:
+            PrivacyView(vm: privacyVM)
+        case .shredder:
+            ShredderView(vm: shredderVM)
+        case .settings:
+            SettingsView(history: historyStore, exclusions: exclusionStore)
         }
-        .background(TossColor.card)
     }
 
     private func undoBanner(_ session: TrashUndoSession) -> some View {
@@ -196,102 +199,14 @@ struct ContentView: View {
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
         .background(TossColor.card)
-        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .stroke(TossColor.grey200)
         )
         .shadow(color: .black.opacity(0.12), radius: 12, y: 4)
     }
 
-    private func navItem(_ section: AppSection) -> some View {
-        let active = (selection ?? .dashboard) == section
-        return Button {
-            selection = section
-        } label: {
-            HStack(spacing: 12) {
-                Image(systemName: section.icon)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(active ? TossColor.blue : TossColor.grey400)
-                    .frame(width: 20)
-                Text(section.rawValue)
-                    .font(.system(size: 13.5, weight: active ? .bold : .semibold))
-                    .foregroundStyle(active ? TossColor.blue : TossColor.grey700)
-                Spacer()
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-            .background(active ? TossColor.blueLight : .clear)
-            .clipShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-    }
-
-    private var monitorSection: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            Rectangle()
-                .fill(TossColor.grey100)
-                .frame(height: 1)
-                .padding(.bottom, 10)
-            Text("실시간 도구")
-                .font(.system(size: 11, weight: .bold))
-                .foregroundStyle(TossColor.grey400)
-                .padding(.horizontal, 12)
-                .padding(.bottom, 5)
-            Button {
-                openWindow(id: "monitor")
-            } label: {
-                HStack(spacing: 10) {
-                    Circle()
-                        .fill(TossColor.mint)
-                        .frame(width: 8, height: 8)
-                    Text("실시간 플로팅 창")
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundStyle(TossColor.grey700)
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundStyle(TossColor.grey400)
-                }
-                .padding(.horizontal, 14)
-                .padding(.vertical, 12)
-                .background(TossColor.card)
-                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .stroke(TossColor.grey200)
-                )
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-        }
-    }
-
-    private var deviceCard: some View {
-        HStack(spacing: 10) {
-            Circle()
-                .fill(TossColor.mint)
-                .frame(width: 10, height: 10)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(machineChipName())
-                    .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(TossColor.grey700)
-                    .lineLimit(1)
-                Text("정밀 진단 활성화됨")
-                    .font(.system(size: 10, weight: .semibold))
-                    .foregroundStyle(TossColor.grey400)
-            }
-            Spacer()
-        }
-        .padding(12)
-        .background(TossColor.grey50)
-        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .stroke(TossColor.grey200.opacity(0.6))
-        )
-    }
 }
 
 /// 화면 상단 공통 헤더
@@ -304,16 +219,21 @@ struct SectionHeader<Trailing: View>: View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 5) {
                 Text(title)
-                    .font(.system(size: 26, weight: .heavy))
+                    .font(.system(size: 22, weight: .bold))
                     .foregroundStyle(TossColor.grey900)
                 Text(subtitle)
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.system(size: 12.5, weight: .medium))
                     .foregroundStyle(TossColor.grey500)
             }
             Spacer()
             trailing
         }
         .padding(.horizontal, 24)
-        .padding(.vertical, 20)
+        .padding(.top, 20)
+        .padding(.bottom, 16)
+        .overlay(alignment: .bottom) {
+            Rectangle().fill(TossColor.line).frame(height: 1)
+                .padding(.horizontal, 24)
+        }
     }
 }

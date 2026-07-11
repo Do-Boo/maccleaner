@@ -14,7 +14,16 @@ struct MacCleanerApp: App {
         WindowGroup("MacCleaner", id: "main") {
             ContentView()
         }
-        .windowStyle(.automatic)
+        .windowStyle(.hiddenTitleBar)
+        .defaultSize(width: 1380, height: 840)
+        .commands {
+            CommandMenu("탐색") {
+                Button("기능 검색") {
+                    NotificationCenter.default.post(name: .focusBrandSearch, object: nil)
+                }
+                .keyboardShortcut("k", modifiers: .command)
+            }
+        }
 
         // 실시간 플로팅 모니터 창 (사이드바 '실시간 플로팅 창' 버튼으로 열기)
         Window("Mac 실시간 상태", id: "monitor") {

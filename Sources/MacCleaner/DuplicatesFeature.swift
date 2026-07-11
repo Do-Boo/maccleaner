@@ -399,7 +399,7 @@ struct DuplicatesView: View {
             } else if vm.groups.isEmpty {
                 emptyState(icon: "checkmark.circle", message: "중복 파일이 없습니다")
             } else {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     LazyVStack(alignment: .leading, spacing: 18) {
                         ForEach(vm.groups) { group in
                             VStack(alignment: .leading, spacing: 8) {

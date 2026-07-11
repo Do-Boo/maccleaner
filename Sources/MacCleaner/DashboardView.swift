@@ -2,21 +2,24 @@ import SwiftUI
 
 struct DashboardView: View {
     @ObservedObject var vm: DashboardViewModel
-    @Binding var selection: AppSection?
+    @Binding var selection: AppSection
     var onQuickOptimize: () -> Void = {}
     @State private var confirmEmptyTrash = false
 
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 22) {
-                // 헤더
                 HStack(alignment: .bottom) {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("내 맥을 쉽고 가볍게")
-                            .font(.system(size: 26, weight: .heavy))
+                        Text("SYSTEM OVERVIEW")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(TossColor.blue)
+                            .tracking(0.9)
+                        Text("오늘의 Mac 상태")
+                            .font(.system(size: 24, weight: .heavy))
                             .foregroundStyle(TossColor.grey900)
-                        Text("안전하게 디바이스 자원을 정리하고 기기 수명을 늘려보세요.")
-                            .font(.system(size: 14, weight: .medium))
+                        Text("저장 공간과 메모리 상태를 확인하고 필요한 작업을 실행합니다")
+                            .font(.system(size: 12.5, weight: .medium))
                             .foregroundStyle(TossColor.grey500)
                     }
                     Spacer()
@@ -28,27 +31,10 @@ struct DashboardView: View {
                     .buttonStyle(TossProminentButtonStyle())
                 }
 
-                // 자원 점유 카드
-                HStack(spacing: 16) {
-                    statCard(
-                        title: "MACINTOSH HD",
-                        ratio: vm.status.diskUsageRatio,
-                        freeLabel: "여유 공간",
-                        freeValue: formatBytes(vm.status.diskFree),
-                        totalText: "/ \(formatBytes(vm.status.diskTotal))"
-                    )
-                    statCard(
-                        title: "UNIFIED MEMORY",
-                        ratio: vm.status.memUsageRatio,
-                        freeLabel: "사용 가능",
-                        freeValue: formatBytes(max(vm.status.memTotal - vm.status.memUsed, 0)),
-                        totalText: "/ \(formatBytes(vm.status.memTotal))"
-                    )
-                }
+                systemOverview
 
-                // 정리 액션 리스트
                 sectionTitle("지금 정리가 필요한 서비스")
-                VStack(spacing: 12) {
+                VStack(spacing: 0) {
                     actionCard(
                         icon: "memorychip",
                         tint: TossColor.blue,
@@ -59,6 +45,8 @@ struct DashboardView: View {
                         Button("메모리 확보하기") { vm.freeMemory() }
                             .buttonStyle(TossPillButtonStyle())
                     }
+
+                    actionDivider
 
                     actionCard(
                         icon: "trash",
@@ -80,6 +68,8 @@ struct DashboardView: View {
                         .disabled(vm.status.trashSize == 0)
                     }
 
+                    actionDivider
+
                     actionCard(
                         icon: "power",
                         tint: TossColor.mint,
@@ -91,26 +81,30 @@ struct DashboardView: View {
                             get: { vm.launchAtLogin },
                             set: { vm.setLaunchAtLogin($0) }
                         ))
-                        .toggleStyle(.switch)
+                        .toggleStyle(BrandSwitchToggleStyle())
                         .labelsHidden()
                     }
                 }
+                .background(TossColor.card)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .stroke(TossColor.line)
+                )
 
-                // 빠른 실행
                 sectionTitle("빠른 실행")
-                VStack(spacing: 12) {
-                    HStack(spacing: 12) {
-                        quickButton(.junk, description: "캐시·로그 정리")
-                        quickButton(.largeFiles, description: "큰 파일 찾기")
-                        quickButton(.duplicates, description: "같은 파일 정리")
-                        quickButton(.apps, description: "앱 완전 삭제")
-                    }
-                    HStack(spacing: 12) {
-                        quickButton(.downloads, description: "묵은 다운로드")
-                        quickButton(.loginItems, description: "자동 실행 관리")
-                        quickButton(.maintenance, description: "관리 도구")
-                        quickButton(.privacy, description: "브라우저 정리")
-                    }
+                LazyVGrid(
+                    columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 4),
+                    spacing: 10
+                ) {
+                    quickButton(.junk, description: "캐시·로그 정리")
+                    quickButton(.largeFiles, description: "큰 파일 찾기")
+                    quickButton(.duplicates, description: "같은 파일 정리")
+                    quickButton(.apps, description: "앱 완전 삭제")
+                    quickButton(.downloads, description: "묵은 다운로드")
+                    quickButton(.loginItems, description: "자동 실행 관리")
+                    quickButton(.maintenance, description: "관리 도구")
+                    quickButton(.privacy, description: "브라우저 정리")
                 }
 
                 Spacer(minLength: 8)
@@ -151,54 +145,83 @@ struct DashboardView: View {
             .padding(.top, 4)
     }
 
-    private func statCard(
-        title: String, ratio: Double,
-        freeLabel: String, freeValue: String, totalText: String
-    ) -> some View {
-        VStack(alignment: .leading, spacing: 0) {
+    private var systemOverview: some View {
+        HStack(spacing: 0) {
+            overviewMetric(
+                title: "MACINTOSH HD",
+                ratio: vm.status.diskUsageRatio,
+                value: formatBytes(vm.status.diskFree),
+                caption: "사용 가능"
+            )
+            overviewDivider
+            overviewMetric(
+                title: "UNIFIED MEMORY",
+                ratio: vm.status.memUsageRatio,
+                value: formatBytes(max(vm.status.memTotal - vm.status.memUsed, 0)),
+                caption: "사용 가능"
+            )
+            overviewDivider
+            VStack(alignment: .leading, spacing: 7) {
+                Text("TRASH")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundStyle(TossColor.grey400)
+                    .tracking(0.7)
+                Text(vm.status.trashSize == 0 ? "CLEAN" : formatBytes(vm.status.trashSize))
+                    .font(.system(size: 19, weight: .heavy, design: .monospaced))
+                    .foregroundStyle(vm.status.trashSize == 0 ? TossColor.mint : TossColor.orange)
+                Text(vm.status.trashSize == 0 ? "정리할 항목 없음" : "정리 가능")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(TossColor.grey500)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(20)
+        }
+        .background(TossColor.card)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(TossColor.line)
+        )
+    }
+
+    private func overviewMetric(title: String, ratio: Double, value: String, caption: String) -> some View {
+        VStack(alignment: .leading, spacing: 7) {
             HStack {
                 Text(title)
-                    .font(.system(size: 13, weight: .bold))
+                    .font(.system(size: 10, weight: .bold))
                     .foregroundStyle(TossColor.grey400)
-                    .kerning(0.5)
+                    .tracking(0.7)
                 Spacer()
                 Text("\(Int(min(max(ratio, 0), 1) * 100))%")
-                    .font(.system(size: 22, weight: .heavy))
+                    .font(.system(size: 11, weight: .bold, design: .monospaced))
                     .foregroundStyle(TossColor.blue)
-                    .monospacedDigit()
             }
-            .padding(.bottom, 18)
-
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule().fill(TossColor.grey200)
-                    Capsule()
-                        .fill(TossColor.blue)
-                        .frame(width: max(geo.size.width * min(max(ratio, 0), 1), 10))
-                        .animation(.easeOut(duration: 0.8), value: ratio)
+            Text(value)
+                .font(.system(size: 19, weight: .heavy, design: .monospaced))
+                .foregroundStyle(TossColor.grey900)
+            HStack(spacing: 8) {
+                GeometryReader { geometry in
+                    ZStack(alignment: .leading) {
+                        Rectangle().fill(TossColor.grey200)
+                        Rectangle()
+                            .fill(TossColor.blue)
+                            .frame(width: geometry.size.width * min(max(ratio, 0), 1))
+                    }
                 }
-            }
-            .frame(height: 10)
-            .padding(.bottom, 18)
-
-            HStack(spacing: 5) {
-                Text(freeLabel)
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(TossColor.grey700)
-                Text(freeValue)
-                    .font(.system(size: 13, weight: .bold))
-                    .foregroundStyle(TossColor.blue)
-                Spacer()
-                Text(totalText)
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(TossColor.grey400)
-                    .monospacedDigit()
+                .frame(height: 4)
+                Text(caption)
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(TossColor.grey500)
             }
         }
-        .padding(24)
-        .background(TossColor.card)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .shadow(color: .black.opacity(0.04), radius: 12, y: 4)
+        .frame(maxWidth: .infinity)
+        .padding(20)
+    }
+
+    private var overviewDivider: some View {
+        Rectangle()
+            .fill(TossColor.line)
+            .frame(width: 1, height: 72)
     }
 
     private func actionCard<Trailing: View>(
@@ -209,7 +232,7 @@ struct DashboardView: View {
         @ViewBuilder trailing: () -> Trailing
     ) -> some View {
         HStack(spacing: 18) {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(tintBG)
                 .frame(width: 52, height: 52)
                 .overlay(
@@ -229,7 +252,7 @@ struct DashboardView: View {
                             .padding(.vertical, 2)
                             .background(badgeBG)
                             .foregroundStyle(badgeTint)
-                            .clipShape(Capsule())
+                            .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
                     }
                 }
                 Text(description)
@@ -239,10 +262,15 @@ struct DashboardView: View {
             Spacer()
             trailing()
         }
-        .padding(20)
-        .background(TossColor.card)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .shadow(color: .black.opacity(0.04), radius: 12, y: 4)
+        .padding(.horizontal, 18)
+        .padding(.vertical, 15)
+    }
+
+    private var actionDivider: some View {
+        Rectangle()
+            .fill(TossColor.line)
+            .frame(height: 1)
+            .padding(.leading, 86)
     }
 
     private func quickButton(_ section: AppSection, description: String) -> some View {

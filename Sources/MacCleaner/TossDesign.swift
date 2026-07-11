@@ -56,7 +56,13 @@ enum TossColor {
     static let grey100 = Color(light: 0xF2F4F6, dark: 0x262C33)
     static let grey50 = Color(light: 0xF9FAFB, dark: 0x1E2329)
 
-    static let bg = grey100    // 화면 배경
+    static let chrome = Color(light: 0xFFFFFF, dark: 0x171A1F)
+    static let sidebar = Color(light: 0x171A1F, dark: 0x0F1115)
+    static let canvas = Color(light: 0xF6F8FA, dark: 0x20242A)
+    static let inspector = Color(light: 0xFBFCFD, dark: 0x191D22)
+    static let line = Color(light: 0xE3E7EB, dark: 0x333940)
+
+    static let bg = canvas
     static let card = Color(light: 0xFFFFFF, dark: 0x161A1F)
 }
 
@@ -85,7 +91,7 @@ struct TossProminentButtonStyle: ButtonStyle {
             .padding(.vertical, 12)
             .background(TossColor.blue)
             .foregroundStyle(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
             .opacity(configuration.isPressed ? 0.85 : 1)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
     }
@@ -118,7 +124,7 @@ struct TossDangerProminentButtonStyle: ButtonStyle {
             .padding(.vertical, 12)
             .background(TossColor.red)
             .foregroundStyle(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
             .opacity(configuration.isPressed ? 0.85 : 1)
     }
 }
@@ -142,8 +148,11 @@ struct TossTileButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .background(TossColor.card)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .stroke(TossColor.line)
+            )
             .opacity(configuration.isPressed ? 0.6 : 1)
             .animation(.easeOut(duration: 0.1), value: configuration.isPressed)
     }
@@ -191,8 +200,11 @@ struct TossList<Item: Identifiable, Row: View>: View {
             }
         }
         .background(TossColor.card)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(TossColor.line)
+        )
     }
 }
 
@@ -244,7 +256,10 @@ struct TossGroupBoxStyle: GroupBoxStyle {
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(TossColor.card)
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .shadow(color: .black.opacity(0.04), radius: 8, y: 2)
+        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .stroke(TossColor.line)
+        )
     }
 }

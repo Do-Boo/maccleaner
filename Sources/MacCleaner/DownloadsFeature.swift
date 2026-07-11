@@ -117,18 +117,22 @@ struct DownloadsView: View {
                 subtitle: "다운로드 폴더에서 오랫동안 손대지 않은 항목을 찾습니다"
             ) {
                 HStack {
-                    Picker("기간", selection: $vm.months) {
-                        Text("1개월 이상").tag(1)
-                        Text("3개월 이상").tag(3)
-                        Text("6개월 이상").tag(6)
-                        Text("1년 이상").tag(12)
-                    }
+                    BrandMenuPicker(
+                        title: "기간",
+                        selection: $vm.months,
+                        options: [
+                            (1, "1개월 이상"),
+                            (3, "3개월 이상"),
+                            (6, "6개월 이상"),
+                            (12, "1년 이상"),
+                        ]
+                    )
                     .frame(width: 150)
-                    Picker("정렬", selection: $sort) {
-                        ForEach(ScanItemSort.allCases) { option in
-                            Text(option.rawValue).tag(option)
-                        }
-                    }
+                    BrandMenuPicker(
+                        title: "정렬",
+                        selection: $sort,
+                        options: ScanItemSort.allCases.map { ($0, $0.rawValue) }
+                    )
                     .frame(width: 100)
 
                     Button {
@@ -156,7 +160,7 @@ struct DownloadsView: View {
             } else if vm.items.isEmpty {
                 emptyState(icon: "checkmark.circle", message: "해당 기간보다 오래된 항목이 없습니다")
             } else {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     TossList(items: sortedItems) { item in
                         HStack {
                             Toggle(isOn: Binding(

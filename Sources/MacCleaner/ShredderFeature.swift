@@ -190,7 +190,7 @@ struct ShredderView: View {
             } else if vm.items.isEmpty {
                 emptyState(icon: "flame", message: "'파일 추가'로 덮어쓴 뒤 삭제할 항목을 골라주세요")
             } else {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     TossList(items: vm.items) { item in
                         HStack {
                             VStack(alignment: .leading, spacing: 2) {

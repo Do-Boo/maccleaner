@@ -99,7 +99,7 @@ struct MaintenanceView: View {
                 EmptyView()
             }
 
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 TossList(items: MaintenanceTasks.all) { task in
                     HStack(spacing: 12) {
                     Image(systemName: task.icon)

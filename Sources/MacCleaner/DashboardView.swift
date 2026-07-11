@@ -28,14 +28,12 @@ struct DashboardView: View {
                             spatialMetric(
                                 title: "메모리 여유",
                                 value: formatBytes(max(vm.status.memTotal - vm.status.memUsed, 0)),
-                                caption: "전체 \(formatBytes(vm.status.memTotal))",
-                                tint: TossColor.mint
+                                caption: "전체 \(formatBytes(vm.status.memTotal))"
                             )
                             spatialMetric(
                                 title: "휴지통",
                                 value: vm.status.trashSize == 0 ? "정상" : formatBytes(vm.status.trashSize),
-                                caption: vm.status.trashSize == 0 ? "정리할 항목 없음" : "비우기 가능",
-                                tint: vm.status.trashSize == 0 ? TossColor.mint : TossColor.orange
+                                caption: vm.status.trashSize == 0 ? "정리할 항목 없음" : "비우기 가능"
                             )
                         }
                         .frame(width: 190, alignment: .leading)
@@ -50,14 +48,12 @@ struct DashboardView: View {
                             spatialMetric(
                                 title: "전체 저장 공간",
                                 value: formatBytes(vm.status.diskTotal),
-                                caption: "내장 디스크",
-                                tint: TossColor.blue
+                                caption: "내장 디스크"
                             )
                             spatialMetric(
                                 title: "사용 중",
                                 value: formatBytes(max(vm.status.diskTotal - vm.status.diskFree, 0)),
-                                caption: "\(Int(vm.status.diskUsageRatio * 100))% 사용",
-                                tint: TossColor.blue
+                                caption: "\(Int(vm.status.diskUsageRatio * 100))% 사용"
                             )
                         }
                         .frame(width: 190, alignment: .leading)
@@ -152,24 +148,18 @@ struct DashboardView: View {
         .background(TossColor.canvas.opacity(0.92))
     }
 
-    private func spatialMetric(title: String, value: String, caption: String, tint: Color) -> some View {
-        HStack(spacing: 11) {
-            Rectangle()
-                .fill(tint)
-                .frame(width: 2, height: 42)
-
-            VStack(alignment: .leading, spacing: 3) {
-                Text(title)
-                    .font(.system(size: 10.5, weight: .semibold))
-                    .foregroundStyle(TossColor.grey400)
-                Text(value)
-                    .font(.system(size: 16, weight: .bold, design: .monospaced))
-                    .foregroundStyle(TossColor.grey900)
-                    .monospacedDigit()
-                Text(caption)
-                    .font(.system(size: 9.5, weight: .medium))
-                    .foregroundStyle(TossColor.grey500)
-            }
+    private func spatialMetric(title: String, value: String, caption: String) -> some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(title)
+                .font(.system(size: 10.5, weight: .semibold))
+                .foregroundStyle(TossColor.grey400)
+            Text(value)
+                .font(.system(size: 16, weight: .bold, design: .monospaced))
+                .foregroundStyle(TossColor.grey900)
+                .monospacedDigit()
+            Text(caption)
+                .font(.system(size: 9.5, weight: .medium))
+                .foregroundStyle(TossColor.grey500)
         }
     }
 

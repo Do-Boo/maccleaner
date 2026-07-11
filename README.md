@@ -1,6 +1,6 @@
 # MacCleaner
 
-SwiftUI로 만든 네이티브 macOS 정리 및 시스템 관리 앱입니다.
+SwiftUI로 만든 네이티브 macOS 정리 및 시스템 관리 앱과 iPhone용 동반 앱입니다.
 
 ## Homebrew 설치
 
@@ -77,6 +77,23 @@ open build/MacCleaner.app
 
 - macOS 14 (Sonoma) 이상
 - Swift 5.10 이상 (Xcode Command Line Tools)
+
+## iPhone 앱
+
+`Mobile/MacCleanerMobile.xcodeproj`에는 iOS 17 이상에서 실행되는 별도 앱이 포함되어 있습니다.
+
+- 기기 전체·여유 저장 공간, 배터리, 네트워크 상태 확인
+- 사진 보관함의 스크린샷, 60초 이상 동영상, 유사 촬영 후보 분류
+- 사용자가 선택한 사진과 동영상을 iOS의 최근 삭제된 항목으로 이동
+- 파일 앱에서 여러 파일을 가져와 크기 확인, 공유, 앱 보관함에서 삭제
+
+```bash
+cd Mobile
+xcodegen generate
+open MacCleanerMobile.xcodeproj
+```
+
+> iOS 샌드박스 정책상 다른 앱의 캐시, 시스템 로그, 앱 데이터는 조회하거나 삭제할 수 없습니다. 모바일 앱은 사용자가 권한을 부여한 사진과 앱으로 직접 가져온 파일만 변경합니다.
 
 ## 프로젝트 구조
 

@@ -100,7 +100,7 @@ struct BrandTopBar: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Color.clear.frame(width: 66)
+            Color.clear.frame(width: 38)
 
             Text("MacCleaner")
                 .font(.system(size: 14, weight: .bold))

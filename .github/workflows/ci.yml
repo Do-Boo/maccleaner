@@ -9,9 +9,26 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  macos-test:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v7
       - name: Run tests
         run: swift test
+
+  ios-test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate iOS project
+        working-directory: Mobile
+        run: xcodegen generate
+      - name: Run iOS tests
+        run: >-
+          xcodebuild test
+          -project Mobile/MacCleanerMobile.xcodeproj
+          -scheme MacCleanerMobile
+          -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=latest'
+          CODE_SIGNING_ALLOWED=NO

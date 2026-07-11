@@ -41,8 +41,6 @@ enum AppSection: String, CaseIterable, Identifiable {
 struct ContentView: View {
     @State private var selection: AppSection = .dashboard
     @State private var searchText = ""
-    @State private var sidebarCollapsed = false
-    @State private var inspectorVisible = true
     @StateObject private var dashboardVM = DashboardViewModel()
     @StateObject private var smartScanVM = SmartScanViewModel()
     @StateObject private var permissionsVM = PermissionsViewModel()
@@ -66,42 +64,29 @@ struct ContentView: View {
             BrandTopBar(
                 selection: selection,
                 searchText: $searchText,
-                sidebarCollapsed: sidebarCollapsed,
-                inspectorVisible: inspectorVisible,
-                onToggleSidebar: {
-                    withAnimation(.easeInOut(duration: 0.18)) {
-                        sidebarCollapsed.toggle()
-                    }
-                },
-                onToggleInspector: {
-                    withAnimation(.easeInOut(duration: 0.18)) {
-                        inspectorVisible.toggle()
-                    }
-                },
                 onOpenMonitor: { openWindow(id: "monitor") },
                 onSelect: { selection = $0 }
             )
 
             HStack(spacing: 0) {
-                BrandSidebar(selection: $selection, collapsed: sidebarCollapsed)
+                ToolRail(selection: $selection)
 
-                detailContent
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(TossColor.canvas)
-                    .scrollIndicators(.hidden)
+                VStack(spacing: 0) {
+                    detailContent
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(TossColor.canvas)
+                        .scrollIndicators(.hidden)
 
-                if inspectorVisible {
-                    SystemPulsePanel(
+                    SystemStatusBar(
                         monitor: MonitorModel.shared,
                         dashboard: dashboardVM,
                         history: historyStore,
                         selection: selection
                     )
-                    .transition(.move(edge: .trailing).combined(with: .opacity))
                 }
             }
         }
-        .frame(minWidth: 1180, minHeight: 720)
+        .frame(minWidth: 1040, minHeight: 720)
         .background(TossColor.canvas)
         .overlay {
             MacCleanerWindowConfigurator()

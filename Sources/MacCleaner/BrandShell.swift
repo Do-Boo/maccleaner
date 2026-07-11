@@ -85,10 +85,6 @@ struct MacCleanerWindowConfigurator: NSViewRepresentable {
 struct BrandTopBar: View {
     let selection: AppSection
     @Binding var searchText: String
-    let sidebarCollapsed: Bool
-    let inspectorVisible: Bool
-    let onToggleSidebar: () -> Void
-    let onToggleInspector: () -> Void
     let onOpenMonitor: () -> Void
     let onSelect: (AppSection) -> Void
 
@@ -105,14 +101,6 @@ struct BrandTopBar: View {
     var body: some View {
         HStack(spacing: 12) {
             Color.clear.frame(width: 66)
-
-            Text("M")
-                .font(.system(size: 13, weight: .heavy))
-                .foregroundStyle(.white)
-                .frame(width: 28, height: 28)
-                .background(TossColor.blue)
-                .clipShape(RoundedRectangle(cornerRadius: 7, style: .continuous))
-                .accessibilityHidden(true)
 
             Text("MacCleaner")
                 .font(.system(size: 14, weight: .bold))
@@ -134,18 +122,6 @@ struct BrandTopBar: View {
                 icon: "waveform.path.ecg",
                 help: "실시간 모니터 열기",
                 action: onOpenMonitor
-            )
-            BrandIconButton(
-                icon: inspectorVisible ? "sidebar.trailing" : "sidebar.trailing",
-                help: inspectorVisible ? "상태 패널 닫기" : "상태 패널 열기",
-                isActive: inspectorVisible,
-                action: onToggleInspector
-            )
-            BrandIconButton(
-                icon: sidebarCollapsed ? "sidebar.left" : "sidebar.left",
-                help: sidebarCollapsed ? "사이드바 펼치기" : "사이드바 접기",
-                isActive: !sidebarCollapsed,
-                action: onToggleSidebar
             )
         }
         .padding(.horizontal, 14)
@@ -250,6 +226,132 @@ struct BrandTopBar: View {
                 .stroke(TossColor.line)
         )
         .shadow(color: .black.opacity(0.16), radius: 18, y: 8)
+    }
+}
+
+struct ToolRail: View {
+    @Binding var selection: AppSection
+
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 8) {
+                ForEach(Array(brandSidebarGroups.enumerated()), id: \.element.id) { index, group in
+                    VStack(spacing: 3) {
+                        ForEach(group.sections) { section in
+                            toolButton(section)
+                        }
+                    }
+
+                    if index < brandSidebarGroups.count - 1 {
+                        Rectangle()
+                            .fill(Color.white.opacity(0.08))
+                            .frame(width: 24, height: 1)
+                            .padding(.vertical, 1)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+        }
+        .frame(width: 64)
+        .background(TossColor.sidebar)
+        .overlay(alignment: .trailing) {
+            Rectangle().fill(Color.white.opacity(0.06)).frame(width: 1)
+        }
+    }
+
+    private func toolButton(_ section: AppSection) -> some View {
+        let active = selection == section
+        return Button {
+            withAnimation(.easeOut(duration: 0.12)) {
+                selection = section
+            }
+        } label: {
+            Image(systemName: section.icon)
+                .font(.system(size: 13.5, weight: .semibold))
+                .foregroundStyle(active ? .white : Color.white.opacity(0.48))
+                .frame(width: 36, height: 32)
+                .background(active ? Color.white.opacity(0.12) : .clear)
+                .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .help(section.rawValue)
+        .accessibilityLabel(section.rawValue)
+        .accessibilityValue(active ? "선택됨" : "")
+    }
+}
+
+struct SystemStatusBar: View {
+    @ObservedObject var monitor: MonitorModel
+    @ObservedObject var dashboard: DashboardViewModel
+    @ObservedObject var history: CleanupHistoryStore
+    let selection: AppSection
+
+    var body: some View {
+        HStack(spacing: 18) {
+            VStack(alignment: .leading, spacing: 1) {
+                Text(selection.rawValue)
+                    .font(.system(size: 11.5, weight: .semibold))
+                    .foregroundStyle(TossColor.grey700)
+                Text(selection.summary)
+                    .font(.system(size: 9.5, weight: .medium))
+                    .foregroundStyle(TossColor.grey400)
+                    .lineLimit(1)
+            }
+            .frame(maxWidth: 250, alignment: .leading)
+
+            Spacer(minLength: 12)
+
+            statusMetric(title: "CPU", value: "\(Int(monitor.cpu))%")
+            statusDivider
+            statusMetric(title: "메모리", value: "\(Int(monitor.memRatio * 100))%")
+            statusDivider
+            statusMetric(title: "남은 공간", value: formatBytes(dashboard.status.diskFree))
+
+            if let record = history.records.first {
+                statusDivider
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("최근 작업")
+                        .font(.system(size: 9.5, weight: .medium))
+                        .foregroundStyle(TossColor.grey400)
+                    Text("\(record.action) · \(formatBytes(record.freedBytes))")
+                        .font(.system(size: 10.5, weight: .semibold))
+                        .foregroundStyle(TossColor.grey700)
+                        .lineLimit(1)
+                }
+                .frame(maxWidth: 220, alignment: .leading)
+            }
+        }
+        .padding(.horizontal, 18)
+        .frame(height: 50)
+        .background(TossColor.chrome)
+        .overlay(alignment: .top) {
+            Rectangle().fill(TossColor.line).frame(height: 1)
+        }
+        .onAppear {
+            monitor.start()
+            dashboard.refresh()
+        }
+    }
+
+    private func statusMetric(title: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text(title)
+                .font(.system(size: 9.5, weight: .medium))
+                .foregroundStyle(TossColor.grey400)
+            Text(value)
+                .font(.system(size: 10.5, weight: .semibold, design: .monospaced))
+                .foregroundStyle(TossColor.grey700)
+                .monospacedDigit()
+        }
+        .fixedSize(horizontal: true, vertical: false)
+    }
+
+    private var statusDivider: some View {
+        Rectangle()
+            .fill(TossColor.line)
+            .frame(width: 1, height: 24)
     }
 }
 

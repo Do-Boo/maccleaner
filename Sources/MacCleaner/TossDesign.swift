@@ -37,15 +37,15 @@ extension Color {
 
 enum TossColor {
     // 브랜드
-    static let blue = Color(light: 0x3182F6, dark: 0x5A9CFF)
-    static let blueLight = Color(light: 0xE8F3FF, dark: 0x17375E)
-    static let red = Color(light: 0xF04452, dark: 0xFF6673)
-    static let redLight = Color(light: 0xFEECEE, dark: 0x4A242A)
-    static let green = Color(light: 0x00C471, dark: 0x29D98A)
-    static let orange = Color(light: 0xFF8400, dark: 0xFFA33A)
-    static let orangeLight = Color(light: 0xFFF2E6, dark: 0x49301D)
-    static let mint = Color(light: 0x00C7AE, dark: 0x28D7C2)
-    static let mintLight = Color(light: 0xE6FAF7, dark: 0x173D38)
+    static let blue = Color(light: 0x4F7FD7, dark: 0x6D9BE8)
+    static let blueLight = Color(light: 0xEAF0FA, dark: 0x1B2A3F)
+    static let red = Color(light: 0xD85D6A, dark: 0xE87984)
+    static let redLight = Color(light: 0xF9ECEE, dark: 0x45272D)
+    static let green = Color(light: 0x2FAE78, dark: 0x4BC38F)
+    static let orange = Color(light: 0xC98B48, dark: 0xDDA261)
+    static let orangeLight = Color(light: 0xF8F0E6, dark: 0x403223)
+    static let mint = Color(light: 0x2FAE9B, dark: 0x47C3AE)
+    static let mintLight = Color(light: 0xE8F6F3, dark: 0x1B3934)
 
     // 그레이 스케일
     static let grey900 = Color(light: 0x191F28, dark: 0xF2F4F6) // 제목

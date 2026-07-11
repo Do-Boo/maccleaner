@@ -125,10 +125,12 @@ struct BrandTopBar: View {
             )
         }
         .padding(.horizontal, 14)
-        .frame(height: 58)
-        .background(TossColor.chrome)
+        .frame(height: 54)
+        .background(selection == .dashboard ? TossColor.canvas : TossColor.chrome)
         .overlay(alignment: .bottom) {
-            Rectangle().fill(TossColor.line).frame(height: 1)
+            if selection != .dashboard {
+                Rectangle().fill(TossColor.line).frame(height: 1)
+            }
         }
         .overlay(alignment: .topTrailing) {
             if searchFocused && !searchText.isEmpty {
@@ -349,6 +351,93 @@ struct SystemStatusBar: View {
     }
 
     private var statusDivider: some View {
+        Rectangle()
+            .fill(TossColor.line)
+            .frame(width: 1, height: 24)
+    }
+}
+
+struct WorkspaceCommandDeck: View {
+    @Binding var selection: AppSection
+    @ObservedObject var monitor: MonitorModel
+    @ObservedObject var dashboard: DashboardViewModel
+
+    var body: some View {
+        HStack(spacing: 12) {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 5) {
+                    ForEach(Array(brandSidebarGroups.enumerated()), id: \.element.id) { index, group in
+                        HStack(spacing: 3) {
+                            ForEach(group.sections) { section in
+                                commandButton(section)
+                            }
+                        }
+
+                        if index < brandSidebarGroups.count - 1 {
+                            Rectangle()
+                                .fill(TossColor.line)
+                                .frame(width: 1, height: 20)
+                                .padding(.horizontal, 3)
+                        }
+                    }
+                }
+            }
+
+            Spacer(minLength: 8)
+
+            deckMetric(title: "CPU", value: "\(Int(monitor.cpu))%")
+            deckDivider
+            deckMetric(title: "메모리", value: "\(Int(monitor.memRatio * 100))%")
+            deckDivider
+            deckMetric(title: "남은 공간", value: formatBytes(dashboard.status.diskFree))
+        }
+        .padding(.horizontal, 14)
+        .frame(height: 54)
+        .background(TossColor.chrome)
+        .overlay(alignment: .top) {
+            Rectangle().fill(TossColor.line).frame(height: 1)
+        }
+        .onAppear {
+            monitor.start()
+            dashboard.refresh()
+        }
+    }
+
+    private func commandButton(_ section: AppSection) -> some View {
+        let active = selection == section
+        return Button {
+            withAnimation(.easeOut(duration: 0.12)) {
+                selection = section
+            }
+        } label: {
+            Image(systemName: section.icon)
+                .font(.system(size: 12.5, weight: .semibold))
+                .foregroundStyle(active ? .white : TossColor.grey400)
+                .frame(width: 31, height: 30)
+                .background(active ? TossColor.blue : .clear)
+                .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .help(section.rawValue)
+        .accessibilityLabel(section.rawValue)
+        .accessibilityValue(active ? "선택됨" : "")
+    }
+
+    private func deckMetric(title: String, value: String) -> some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text(title)
+                .font(.system(size: 9, weight: .medium))
+                .foregroundStyle(TossColor.grey400)
+            Text(value)
+                .font(.system(size: 10.5, weight: .semibold, design: .monospaced))
+                .foregroundStyle(TossColor.grey700)
+                .monospacedDigit()
+        }
+        .fixedSize(horizontal: true, vertical: false)
+    }
+
+    private var deckDivider: some View {
         Rectangle()
             .fill(TossColor.line)
             .frame(width: 1, height: 24)

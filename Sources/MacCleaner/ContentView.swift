@@ -68,22 +68,17 @@ struct ContentView: View {
                 onSelect: { selection = $0 }
             )
 
-            HStack(spacing: 0) {
-                ToolRail(selection: $selection)
+            VStack(spacing: 0) {
+                detailContent
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(TossColor.canvas)
+                    .scrollIndicators(.hidden)
 
-                VStack(spacing: 0) {
-                    detailContent
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(TossColor.canvas)
-                        .scrollIndicators(.hidden)
-
-                    SystemStatusBar(
-                        monitor: MonitorModel.shared,
-                        dashboard: dashboardVM,
-                        history: historyStore,
-                        selection: selection
-                    )
-                }
+                WorkspaceCommandDeck(
+                    selection: $selection,
+                    monitor: MonitorModel.shared,
+                    dashboard: dashboardVM
+                )
             }
         }
         .frame(minWidth: 1040, minHeight: 720)

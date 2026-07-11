@@ -12,12 +12,12 @@ struct BrandSidebarGroup: Identifiable {
 }
 
 let brandSidebarGroups = [
-    BrandSidebarGroup(title: "OVERVIEW", sections: [.dashboard, .smartScan, .permissions]),
-    BrandSidebarGroup(title: "STORAGE", sections: [.junk, .largeFiles, .duplicates, .downloads]),
-    BrandSidebarGroup(title: "APPLICATIONS", sections: [.apps, .updater]),
-    BrandSidebarGroup(title: "PERFORMANCE", sections: [.loginItems, .maintenance]),
-    BrandSidebarGroup(title: "PRIVACY", sections: [.privacy, .shredder]),
-    BrandSidebarGroup(title: "SYSTEM", sections: [.settings]),
+    BrandSidebarGroup(title: "개요", sections: [.dashboard, .smartScan, .permissions]),
+    BrandSidebarGroup(title: "저장 공간", sections: [.junk, .largeFiles, .duplicates, .downloads]),
+    BrandSidebarGroup(title: "응용 프로그램", sections: [.apps, .updater]),
+    BrandSidebarGroup(title: "성능", sections: [.loginItems, .maintenance]),
+    BrandSidebarGroup(title: "개인정보", sections: [.privacy, .shredder]),
+    BrandSidebarGroup(title: "환경", sections: [.settings]),
 ]
 
 extension AppSection {
@@ -106,8 +106,8 @@ struct BrandTopBar: View {
         HStack(spacing: 12) {
             Color.clear.frame(width: 66)
 
-            Image(systemName: "sparkles")
-                .font(.system(size: 13, weight: .bold))
+            Text("M")
+                .font(.system(size: 13, weight: .heavy))
                 .foregroundStyle(.white)
                 .frame(width: 28, height: 28)
                 .background(TossColor.blue)
@@ -270,10 +270,9 @@ struct BrandSidebar: View {
                                     .frame(maxWidth: .infinity)
                             } else {
                                 Text(group.title)
-                                    .font(.system(size: 9.5, weight: .bold))
-                                    .foregroundStyle(Color.white.opacity(0.36))
-                                    .tracking(0.8)
-                                    .padding(.horizontal, 16)
+                                    .font(.system(size: 10.5, weight: .semibold))
+                                    .foregroundStyle(Color.white.opacity(0.38))
+                                    .padding(.horizontal, 12)
                                     .padding(.bottom, 2)
                             }
 
@@ -303,28 +302,24 @@ struct BrandSidebar: View {
             }
         } label: {
             HStack(spacing: 11) {
-                Rectangle()
-                    .fill(active ? TossColor.blue : .clear)
-                    .frame(width: 3, height: 22)
-
                 Image(systemName: section.icon)
                     .font(.system(size: 13.5, weight: .semibold))
-                    .foregroundStyle(active ? .white : Color.white.opacity(0.52))
+                    .foregroundStyle(active ? Color.white.opacity(0.92) : Color.white.opacity(0.5))
                     .frame(width: 20)
 
                 if !collapsed {
                     Text(section.rawValue)
-                        .font(.system(size: 12.5, weight: active ? .bold : .medium))
-                        .foregroundStyle(active ? .white : Color.white.opacity(0.68))
+                        .font(.system(size: 12.5, weight: active ? .semibold : .medium))
+                        .foregroundStyle(active ? Color.white.opacity(0.92) : Color.white.opacity(0.66))
                         .lineLimit(1)
                     Spacer(minLength: 0)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.trailing, 10)
+            .padding(.horizontal, 12)
             .frame(height: 36)
-            .background(active ? Color.white.opacity(0.11) : .clear)
-            .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+            .background(active ? Color.white.opacity(0.08) : .clear)
+            .clipShape(RoundedRectangle(cornerRadius: 5, style: .continuous))
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -369,13 +364,12 @@ struct SystemPulsePanel: View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 7) {
                 Circle().fill(TossColor.mint).frame(width: 7, height: 7)
-                Text("SYSTEM PULSE")
-                    .font(.system(size: 10, weight: .bold))
+                Text("시스템 상태")
+                    .font(.system(size: 11.5, weight: .semibold))
                     .foregroundStyle(TossColor.grey500)
-                    .tracking(0.8)
                 Spacer()
-                Text("LIVE")
-                    .font(.system(size: 9, weight: .heavy, design: .monospaced))
+                Text("실시간")
+                    .font(.system(size: 10, weight: .semibold))
                     .foregroundStyle(TossColor.mint)
             }
             .padding(.horizontal, 18)
@@ -385,13 +379,12 @@ struct SystemPulsePanel: View {
 
             VStack(spacing: 16) {
                 metric(title: "CPU", value: monitor.cpu / 100, text: "\(Int(monitor.cpu))%", tint: TossColor.blue)
-                metric(title: "MEMORY", value: monitor.memRatio, text: "\(Int(monitor.memRatio * 100))%", tint: TossColor.mint)
+                metric(title: "메모리", value: monitor.memRatio, text: "\(Int(monitor.memRatio * 100))%", tint: TossColor.mint)
 
                 HStack {
-                    Text("DISK FREE")
-                        .font(.system(size: 9.5, weight: .bold))
+                    Text("남은 저장 공간")
+                        .font(.system(size: 10.5, weight: .semibold))
                         .foregroundStyle(TossColor.grey400)
-                        .tracking(0.5)
                     Spacer()
                     Text(formatBytes(dashboard.status.diskFree))
                         .font(.system(size: 12, weight: .bold, design: .monospaced))
@@ -403,7 +396,7 @@ struct SystemPulsePanel: View {
             panelDivider
 
             VStack(alignment: .leading, spacing: 10) {
-                panelLabel("CURRENT WORKSPACE")
+                panelLabel("현재 화면")
                 HStack(spacing: 10) {
                     Image(systemName: selection.icon)
                         .font(.system(size: 14, weight: .semibold))
@@ -427,7 +420,7 @@ struct SystemPulsePanel: View {
             panelDivider
 
             VStack(alignment: .leading, spacing: 12) {
-                panelLabel("RECENT ACTIVITY")
+                panelLabel("최근 작업")
                 if history.records.isEmpty {
                     Text("정리 기록이 아직 없습니다")
                         .font(.system(size: 11, weight: .medium))
@@ -471,9 +464,8 @@ struct SystemPulsePanel: View {
         VStack(spacing: 7) {
             HStack {
                 Text(title)
-                    .font(.system(size: 9.5, weight: .bold))
+                    .font(.system(size: 10.5, weight: .semibold))
                     .foregroundStyle(TossColor.grey400)
-                    .tracking(0.5)
                 Spacer()
                 Text(text)
                     .font(.system(size: 12, weight: .bold, design: .monospaced))
@@ -494,9 +486,8 @@ struct SystemPulsePanel: View {
 
     private func panelLabel(_ text: String) -> some View {
         Text(text)
-            .font(.system(size: 9.5, weight: .bold))
+            .font(.system(size: 10.5, weight: .semibold))
             .foregroundStyle(TossColor.grey400)
-            .tracking(0.7)
     }
 
     private var panelDivider: some View {

@@ -11,11 +11,7 @@ struct DashboardView: View {
             VStack(alignment: .leading, spacing: 22) {
                 HStack(alignment: .bottom) {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("SYSTEM OVERVIEW")
-                            .font(.system(size: 10, weight: .bold))
-                            .foregroundStyle(TossColor.blue)
-                            .tracking(0.9)
-                        Text("오늘의 Mac 상태")
+                        Text("Mac 상태")
                             .font(.system(size: 24, weight: .heavy))
                             .foregroundStyle(TossColor.grey900)
                         Text("저장 공간과 메모리 상태를 확인하고 필요한 작업을 실행합니다")
@@ -26,14 +22,14 @@ struct DashboardView: View {
                     Button {
                         onQuickOptimize()
                     } label: {
-                        Label("원클릭 퀵 최적화", systemImage: "bolt.fill")
+                        Label("빠른 최적화", systemImage: "bolt.fill")
                     }
-                    .buttonStyle(TossProminentButtonStyle())
+                    .buttonStyle(TossPillButtonStyle())
                 }
 
                 systemOverview
 
-                sectionTitle("지금 정리가 필요한 서비스")
+                sectionTitle("권장 작업")
                 VStack(spacing: 0) {
                     actionCard(
                         icon: "memorychip",
@@ -148,25 +144,24 @@ struct DashboardView: View {
     private var systemOverview: some View {
         HStack(spacing: 0) {
             overviewMetric(
-                title: "MACINTOSH HD",
+                title: "저장 공간",
                 ratio: vm.status.diskUsageRatio,
                 value: formatBytes(vm.status.diskFree),
                 caption: "사용 가능"
             )
             overviewDivider
             overviewMetric(
-                title: "UNIFIED MEMORY",
+                title: "메모리",
                 ratio: vm.status.memUsageRatio,
                 value: formatBytes(max(vm.status.memTotal - vm.status.memUsed, 0)),
                 caption: "사용 가능"
             )
             overviewDivider
             VStack(alignment: .leading, spacing: 7) {
-                Text("TRASH")
-                    .font(.system(size: 10, weight: .bold))
+                Text("휴지통")
+                    .font(.system(size: 10.5, weight: .semibold))
                     .foregroundStyle(TossColor.grey400)
-                    .tracking(0.7)
-                Text(vm.status.trashSize == 0 ? "CLEAN" : formatBytes(vm.status.trashSize))
+                Text(vm.status.trashSize == 0 ? "정상" : formatBytes(vm.status.trashSize))
                     .font(.system(size: 19, weight: .heavy, design: .monospaced))
                     .foregroundStyle(vm.status.trashSize == 0 ? TossColor.mint : TossColor.orange)
                 Text(vm.status.trashSize == 0 ? "정리할 항목 없음" : "정리 가능")
@@ -188,9 +183,8 @@ struct DashboardView: View {
         VStack(alignment: .leading, spacing: 7) {
             HStack {
                 Text(title)
-                    .font(.system(size: 10, weight: .bold))
+                    .font(.system(size: 10.5, weight: .semibold))
                     .foregroundStyle(TossColor.grey400)
-                    .tracking(0.7)
                 Spacer()
                 Text("\(Int(min(max(ratio, 0), 1) * 100))%")
                     .font(.system(size: 11, weight: .bold, design: .monospaced))

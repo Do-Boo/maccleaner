@@ -210,8 +210,7 @@ struct PrivacyView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SectionHeader(
-                title: "개인정보 정리",
+            PageToolbar(
                 subtitle: "브라우저의 캐시, 방문 기록, 쿠키를 정리합니다"
             ) {
                 HStack {

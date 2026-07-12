@@ -92,8 +92,7 @@ struct MaintenanceView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SectionHeader(
-                title: "유지보수",
+            PageToolbar(
                 subtitle: "맥이 느리거나 이상할 때 쓰는 관리 도구 모음"
             ) {
                 EmptyView()

@@ -11,7 +11,8 @@ struct MacCleanerApp: App {
     }
 
     var body: some Scene {
-        WindowGroup("MacCleaner", id: "main") {
+        // 빈 문자열은 앱 이름으로 대체되므로 공백으로 네이티브 창 제목을 숨깁니다.
+        WindowGroup(" ", id: "main") {
             ContentView()
         }
         .windowStyle(.hiddenTitleBar)

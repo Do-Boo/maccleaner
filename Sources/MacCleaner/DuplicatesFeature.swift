@@ -331,8 +331,7 @@ struct DuplicatesView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SectionHeader(
-                title: "중복 파일",
+            PageToolbar(
                 subtitle: "내용이 완전히 같은 파일을 찾아 정리합니다 (1MB 이상)"
             ) {
                 HStack {

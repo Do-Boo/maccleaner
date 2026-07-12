@@ -112,8 +112,7 @@ struct DownloadsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SectionHeader(
-                title: "다운로드 정리",
+            PageToolbar(
                 subtitle: "다운로드 폴더에서 오랫동안 손대지 않은 항목을 찾습니다"
             ) {
                 HStack {

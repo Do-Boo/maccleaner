@@ -6,8 +6,7 @@ struct JunkView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SectionHeader(
-                title: "시스템 정리",
+            PageToolbar(
                 subtitle: "캐시, 로그 등 불필요한 파일을 찾아 정리합니다"
             ) {
                 HStack {

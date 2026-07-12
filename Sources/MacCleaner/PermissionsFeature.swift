@@ -217,8 +217,7 @@ struct PermissionsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SectionHeader(
-                title: "권한 진단",
+            PageToolbar(
                 subtitle: "스캔 결과가 비거나 정리가 실패할 때 필요한 macOS 권한을 확인합니다"
             ) {
                 Button {

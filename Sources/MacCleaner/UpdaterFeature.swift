@@ -101,8 +101,7 @@ struct UpdaterView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SectionHeader(
-                title: "업데이터",
+            PageToolbar(
                 subtitle: "Homebrew로 설치한 앱과 도구의 업데이트를 확인합니다"
             ) {
                 Button {

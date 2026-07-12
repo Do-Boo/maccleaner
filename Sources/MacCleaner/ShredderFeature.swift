@@ -163,8 +163,7 @@ struct ShredderView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SectionHeader(
-                title: "셰레더",
+            PageToolbar(
                 subtitle: "파일을 무작위 데이터로 덮어쓴 뒤 삭제합니다. SSD/APFS에서는 복구 불가를 보장하지 않습니다"
             ) {
                 HStack {

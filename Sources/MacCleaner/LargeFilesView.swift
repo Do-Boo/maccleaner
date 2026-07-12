@@ -12,8 +12,7 @@ struct LargeFilesView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SectionHeader(
-                title: "대용량 파일",
+            PageToolbar(
                 subtitle: "홈 폴더에서 큰 파일을 찾아 공간을 확보합니다"
             ) {
                 HStack {

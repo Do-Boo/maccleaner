@@ -168,8 +168,7 @@ struct SettingsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SectionHeader(
-                title: "설정",
+            PageToolbar(
                 subtitle: "정리 기록, 제외 목록, 기본 스캔 옵션을 관리합니다"
             ) {
                 Button {

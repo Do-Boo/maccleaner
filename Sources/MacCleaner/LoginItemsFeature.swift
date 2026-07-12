@@ -102,8 +102,7 @@ struct LoginItemsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SectionHeader(
-                title: "시작 프로그램",
+            PageToolbar(
                 subtitle: "로그인할 때 자동 실행되는 백그라운드 항목(LaunchAgents)을 관리합니다"
             ) {
                 HStack {

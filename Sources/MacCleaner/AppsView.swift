@@ -20,8 +20,7 @@ struct AppsView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            SectionHeader(
-                title: "앱 및 관련 파일 삭제",
+            PageToolbar(
                 subtitle: "앱과 선택한 설정·캐시 잔여 파일을 휴지통으로 이동합니다"
             ) {
                 HStack(spacing: 10) {

@@ -189,28 +189,22 @@ struct ContentView: View {
 
 }
 
-/// 화면 상단 공통 헤더
-struct SectionHeader<Trailing: View>: View {
-    let title: String
+/// 현재 화면의 설명과 주요 작업만 제공하는 공통 툴바
+struct PageToolbar<Trailing: View>: View {
     let subtitle: String
     @ViewBuilder var trailing: Trailing
 
     var body: some View {
         HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 5) {
-                Text(title)
-                    .font(.system(size: 22, weight: .bold))
-                    .foregroundStyle(TossColor.grey900)
-                Text(subtitle)
-                    .font(.system(size: 12.5, weight: .medium))
-                    .foregroundStyle(TossColor.grey500)
-            }
+            Text(subtitle)
+                .font(.system(size: 12.5, weight: .medium))
+                .foregroundStyle(TossColor.grey500)
+                .lineLimit(2)
             Spacer()
             trailing
         }
         .padding(.horizontal, 24)
-        .padding(.top, 20)
-        .padding(.bottom, 16)
+        .frame(minHeight: 52)
         .overlay(alignment: .bottom) {
             Rectangle().fill(TossColor.line).frame(height: 1)
                 .padding(.horizontal, 24)

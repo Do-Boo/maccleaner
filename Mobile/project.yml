@@ -7,7 +7,8 @@ options:
 settings:
   base:
     SWIFT_VERSION: 5.10
-    DEVELOPMENT_TEAM: ""
+    DEVELOPMENT_TEAM: 32Z99M2NUD
+    CODE_SIGN_STYLE: Automatic
 targets:
   MacCleanerMobile:
     type: application
@@ -17,11 +18,12 @@ targets:
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.doyoukim.maccleaner.mobile
-        MARKETING_VERSION: 0.1.0
+        MARKETING_VERSION: 1.0.0
         CURRENT_PROJECT_VERSION: 1
         TARGETED_DEVICE_FAMILY: 1
         GENERATE_INFOPLIST_FILE: true
         INFOPLIST_KEY_CFBundleDisplayName: MacCleaner
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
         INFOPLIST_KEY_NSPhotoLibraryUsageDescription: 사진과 동영상의 정리 후보를 찾고 사용자가 선택한 항목을 삭제하기 위해 사진 접근이 필요합니다.
         INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription: 정리 작업 중 사진 보관함의 변경 사항을 저장하기 위해 접근이 필요합니다.
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: true

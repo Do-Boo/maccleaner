@@ -15,6 +15,7 @@
 		3EA4BB0D3E74B5219F04E604 /* MediaLibraryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6F336271A181735E75A9A7 /* MediaLibraryStore.swift */; };
 		7901D2F8C9F35733F5688656 /* DeviceStatusStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 120AEECF49FCE947FA0C5843 /* DeviceStatusStore.swift */; };
 		9D9B5F0B401DEDD2C2DB7DB9 /* PhotosHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2499D460479E117C528DD84B /* PhotosHomeView.swift */; };
+		A0855769E5D60F6EE2686EF5 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 072884B6CD7C4B805DDA1B5A /* PrivacyInfo.xcprivacy */; };
 		A1D7B202A0D0A7E48BF5DC51 /* MobileCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0366BEE249378D4304612CC6 /* MobileCoreTests.swift */; };
 		B9989E4263662E5F21C57126 /* MacCleanerMobileApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B685567449923AA157903448 /* MacCleanerMobileApp.swift */; };
 		C767EB4CA8F0E48F06DC3645 /* ImportedFilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D091532F42213A8498D48172 /* ImportedFilesView.swift */; };
@@ -34,6 +35,7 @@
 /* Begin PBXFileReference section */
 		0366BEE249378D4304612CC6 /* MobileCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileCoreTests.swift; sourceTree = "<group>"; };
 		03B4DE0826156D9C48DE6FBF /* DeviceStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStatusView.swift; sourceTree = "<group>"; };
+		072884B6CD7C4B805DDA1B5A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		120AEECF49FCE947FA0C5843 /* DeviceStatusStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceStatusStore.swift; sourceTree = "<group>"; };
 		1B9730411FE7B3F85DF55AF7 /* ImportedFileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportedFileStore.swift; sourceTree = "<group>"; };
 		2499D460479E117C528DD84B /* PhotosHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosHomeView.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				7C30423A843E888981335A05 /* Assets.xcassets */,
+				072884B6CD7C4B805DDA1B5A /* PrivacyInfo.xcprivacy */,
 				6CBDDEC1E631EE6EA1CAA839 /* App */,
 				41CBBFA89557C6C7E491D7FE /* Design */,
 				DBF5311B3222A9705B4C776A /* Device */,
@@ -182,10 +185,12 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					078CAD990D4F99F596F313B3 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = 32Z99M2NUD;
+						ProvisioningStyle = Automatic;
 					};
 					64D71D8B678278B4D5247079 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = 32Z99M2NUD;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -215,6 +220,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0FB10A0938BFBB621C550A3A /* Assets.xcassets in Resources */,
+				A0855769E5D60F6EE2686EF5 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,9 +313,10 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 32Z99M2NUD;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -381,9 +388,10 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 32Z99M2NUD;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -420,6 +428,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = MacCleaner;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "정리 작업 중 사진 보관함의 변경 사항을 저장하기 위해 접근이 필요합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진과 동영상의 정리 후보를 찾고 사용자가 선택한 항목을 삭제하기 위해 사진 접근이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -429,7 +438,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.doyoukim.maccleaner.mobile;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -444,6 +453,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = MacCleaner;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "정리 작업 중 사진 보관함의 변경 사항을 저장하기 위해 접근이 필요합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진과 동영상의 정리 후보를 찾고 사용자가 선택한 항목을 삭제하기 위해 사진 접근이 필요합니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -453,7 +463,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.doyoukim.maccleaner.mobile;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;

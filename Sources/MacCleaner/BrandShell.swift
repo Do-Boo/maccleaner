@@ -100,15 +100,7 @@ struct BrandTopBar: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            Color.clear.frame(width: 38)
-
-            Text("MacCleaner")
-                .font(.system(size: 14, weight: .bold))
-                .foregroundStyle(TossColor.grey900)
-
-            Rectangle()
-                .fill(TossColor.line)
-                .frame(width: 1, height: 18)
+            Color.clear.frame(width: 54)
 
             Text(selection.rawValue)
                 .font(.system(size: 12.5, weight: .semibold))

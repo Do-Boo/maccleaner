@@ -60,26 +60,33 @@ struct ContentView: View {
     @Environment(\.openWindow) private var openWindow
 
     var body: some View {
-        VStack(spacing: 0) {
-            BrandTopBar(
-                selection: selection,
-                searchText: $searchText,
-                onOpenMonitor: { openWindow(id: "monitor") },
-                onSelect: { selection = $0 }
-            )
-
+        GeometryReader { geometry in
             VStack(spacing: 0) {
+                BrandTopBar(
+                    selection: selection,
+                    searchText: $searchText,
+                    onOpenMonitor: { openWindow(id: "monitor") },
+                    onSelect: { selection = $0 }
+                )
+                .fixedSize(horizontal: false, vertical: true)
+
                 detailContent
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .frame(
+                        width: geometry.size.width,
+                        height: max(geometry.size.height - 108, 0)
+                    )
                     .background(TossColor.canvas)
                     .scrollIndicators(.hidden)
+                    .clipped()
 
                 WorkspaceCommandDeck(
                     selection: $selection,
                     monitor: MonitorModel.shared,
                     dashboard: dashboardVM
                 )
+                .fixedSize(horizontal: false, vertical: true)
             }
+            .frame(width: geometry.size.width, height: geometry.size.height)
         }
         .frame(minWidth: 1040, minHeight: 720)
         .background(TossColor.canvas)

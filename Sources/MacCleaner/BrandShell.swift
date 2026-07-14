@@ -55,10 +55,10 @@ struct MacCleanerWindowConfigurator: NSViewRepresentable {
     private func configure(_ window: NSWindow?) {
         guard let window else { return }
         window.title = " "
-        window.styleMask.remove(.fullSizeContentView)
+        window.styleMask.insert(.fullSizeContentView)
         window.titleVisibility = .hidden
-        window.titlebarAppearsTransparent = false
-        window.titlebarSeparatorStyle = .line
+        window.titlebarAppearsTransparent = true
+        window.titlebarSeparatorStyle = .none
         window.isMovableByWindowBackground = true
         window.tabbingMode = .disallowed
         window.backgroundColor = .windowBackgroundColor
@@ -101,6 +101,8 @@ struct BrandTopBar: View {
 
     var body: some View {
         HStack(spacing: 12) {
+            Color.clear.frame(width: 54)
+
             Text(selection.rawValue)
                 .font(.system(size: 12.5, weight: .semibold))
                 .foregroundStyle(TossColor.grey500)

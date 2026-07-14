@@ -15,6 +15,7 @@ struct MacCleanerApp: App {
         WindowGroup(" ", id: "main") {
             ContentView()
         }
+        .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 1380, height: 840)
         .commands {
             CommandMenu("탐색") {
